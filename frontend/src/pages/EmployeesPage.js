@@ -4,6 +4,9 @@ import api from '../api';
 function EmployeesPage() {
   const [employees, setEmployees] = useState([]);
   const [editingId, setEditingId] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [saving, setSaving] = useState(false);
+
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -12,7 +15,6 @@ function EmployeesPage() {
     joining_date: '',
     basic_salary: '',
   });
-  const [saving, setSaving] = useState(false);
 
   const loadEmployees = async () => {
     const response = await api.get('/api/employees/');
@@ -43,6 +45,7 @@ function EmployeesPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
+
     try {
       const payload = {
         ...form,
@@ -54,15 +57,20 @@ function EmployeesPage() {
       } else {
         await api.post('/api/employees/', payload);
       }
+
       await loadEmployees();
       resetForm();
+      setShowForm(false);
     } finally {
       setSaving(false);
     }
+
   };
 
   const handleEdit = (emp) => {
+    setShowForm(true);
     setEditingId(emp.id);
+
     setForm({
       name: emp.name || '',
       email: emp.email || '',
@@ -71,6 +79,7 @@ function EmployeesPage() {
       joining_date: emp.joining_date || '',
       basic_salary: String(emp.basic_salary ?? ''),
     });
+
   };
 
   const handleDelete = async (id) => {
@@ -79,14 +88,25 @@ function EmployeesPage() {
     await loadEmployees();
   };
 
-  return (
-    <div className="page">
+  return (<div className="page">
+
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
       <h2>Employees</h2>
 
+      {!showForm && (
+        <button className="btn" onClick={() => setShowForm(true)}>
+          Add Employee
+        </button>
+      )}
+    </div>
+
+    {showForm && (
       <section className="page-section">
         <div className="card" style={{ maxWidth: 720 }}>
           <h2>{editingId ? 'Edit Employee' : 'Add Employee'}</h2>
+
           <form onSubmit={handleSubmit} className="form-grid">
+
             <label>
               Name
               <input
@@ -96,6 +116,7 @@ function EmployeesPage() {
                 required
               />
             </label>
+
             <label>
               Email
               <input
@@ -106,6 +127,7 @@ function EmployeesPage() {
                 required
               />
             </label>
+
             <label>
               Department
               <input
@@ -114,6 +136,7 @@ function EmployeesPage() {
                 onChange={handleChange}
               />
             </label>
+
             <label>
               Designation
               <input
@@ -122,6 +145,7 @@ function EmployeesPage() {
                 onChange={handleChange}
               />
             </label>
+
             <label>
               Joining Date
               <input
@@ -132,6 +156,7 @@ function EmployeesPage() {
                 required
               />
             </label>
+
             <label>
               Basic Salary
               <input
@@ -154,70 +179,82 @@ function EmployeesPage() {
                     ? 'Save Changes'
                     : 'Add Employee'}
               </button>
-              {editingId && (
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={resetForm}
-                >
-                  Cancel
-                </button>
-              )}
+
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => {
+                  resetForm();
+                  setShowForm(false);
+                }}
+              >
+                Remove
+              </button>
             </div>
+
           </form>
         </div>
       </section>
+    )}
 
-      <section className="page-section">
-        <div className="table-wrapper">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Department</th>
-                <th>Designation</th>
-                <th>Joining Date</th>
-                <th>Basic Salary</th>
-                <th className="col-actions">Actions</th>
+    <section className="page-section">
+      <div className="table-wrapper">
+        <table className="table">
+
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Department</th>
+              <th>Designation</th>
+              <th>Joining Date</th>
+              <th>Basic Salary</th>
+              <th className="col-actions">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {employees.map((emp) => (
+              <tr key={emp.id}>
+                <td>{emp.name}</td>
+                <td>{emp.email}</td>
+                <td>{emp.department}</td>
+                <td>{emp.designation}</td>
+                {/* <td>{emp.joining_date}</td> */}
+                <td>{new Date(emp.joining_date).toLocaleDateString("en-GB").replaceAll("/", "-")}</td>
+                <td>{emp.basic_salary}</td>
+
+                <td>
+                  <div className="table-actions">
+                    <button
+                      type="button"
+                      className="chip"
+                      onClick={() => handleEdit(emp)}
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      type="button"
+                      className="chip chip-danger"
+                      onClick={() => handleDelete(emp.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+
               </tr>
-            </thead>
-            <tbody>
-              {employees.map((emp) => (
-                <tr key={emp.id}>
-                  <td>{emp.name}</td>
-                  <td>{emp.email}</td>
-                  <td>{emp.department}</td>
-                  <td>{emp.designation}</td>
-                  <td>{emp.joining_date}</td>
-                  <td>{emp.basic_salary}</td>
-                  <td>
-                    <div className="table-actions">
-                      <button
-                        type="button"
-                        className="chip"
-                        onClick={() => handleEdit(emp)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        className="chip chip-danger"
-                        onClick={() => handleDelete(emp.id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </div>
+            ))}
+          </tbody>
+
+        </table>
+      </div>
+    </section>
+
+  </div>
+
   );
 }
 
 export default EmployeesPage;
-

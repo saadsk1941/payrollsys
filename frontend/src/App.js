@@ -21,6 +21,7 @@ const ProtectedRoute = ({ user, children }) => {
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [theme, setTheme] = useState(
     localStorage.getItem('theme') || 'dark'
   );
@@ -63,6 +64,7 @@ function App() {
   }
 
   const handleLogout = () => {
+    setDropdownOpen(false);
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setUser(null);
@@ -90,17 +92,36 @@ function App() {
           <div className="app-header-right">
 
             {/* Theme Icon Button */}
-            <button onClick={toggleTheme} className="btn-secondary">
+            {/* <button onClick={toggleTheme} className="btn-secondary">
               <FontAwesomeIcon icon={theme === 'light' ? faMoon : faSun} />
-            </button>
+            </button> */}
 
-            <span className="user-pill">
-              {user.username} ({user.role})
-            </span>
+            {/* Theme Icon */}
+            <FontAwesomeIcon icon={theme === 'light' ? faMoon : faSun} onClick={toggleTheme} className="theme-icon" />
 
-            <button onClick={handleLogout} className="btn">
-              Logout
-            </button>
+            <div className="user-dropdown-container">
+              <span
+                className="user-pill"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                style={{ cursor: 'pointer' }}
+              >
+                {user.username} ▼
+              </span>
+
+              {dropdownOpen && (
+                <div className="user-dropdown-menu">
+                  {/* <div className="user-dropdown-header">
+                    <strong>{user.username}</strong>
+                    <span className="user-role">{user.role}</span>
+                  </div> */}
+                  <div className="user-dropdown-body">
+                    <button onClick={handleLogout} className="user-dropdown-item text-danger">
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
 
           </div>
         </header>

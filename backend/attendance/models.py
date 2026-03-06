@@ -1,7 +1,5 @@
 from django.db import models
-
 from employees.models import Employee
-
 
 class Attendance(models.Model):
     STATUS_CHOICES = (
@@ -21,5 +19,3 @@ class Attendance(models.Model):
         return f'{self.employee.name} - {self.date} - {self.status}'
 
 from django.db import models
-
-# Create your models here.

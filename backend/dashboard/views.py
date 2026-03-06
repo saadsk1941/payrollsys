@@ -10,7 +10,6 @@ from employees.models import Employee
 from leave_management.models import Leave
 from payroll.models import Payroll
 
-
 class DashboardSummaryView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -46,5 +45,3 @@ class DashboardSummaryView(APIView):
         )
 
 from django.shortcuts import render
-
-# Create your views here.

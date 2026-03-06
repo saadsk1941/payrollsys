@@ -1,7 +1,5 @@
 from django.db import models
-
 from employees.models import Employee
-
 
 class Leave(models.Model):
     LEAVE_TYPE_CHOICES = (
@@ -30,5 +28,3 @@ class Leave(models.Model):
         return f'{self.employee.name} - {self.leave_type} ({self.status})'
 
 from django.db import models
-
-# Create your models here.

@@ -1,9 +1,6 @@
 from decimal import Decimal
-
 from django.db import models
-
 from employees.models import Employee
-
 
 class Payroll(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='payrolls')
@@ -28,5 +25,3 @@ class Payroll(models.Model):
         return f'{self.employee.name} - {self.month:%Y-%m}'
 
 from django.db import models
-
-# Create your models here.
