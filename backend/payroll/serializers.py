@@ -15,8 +15,11 @@ class PayrollSerializer(serializers.ModelSerializer):
             'month',
             'basic_salary',
             'allowances',
+            'overtime_hours',
+            'overtime_rate',
+            'overtime_amount',
             'deductions',
             'net_salary',
         ]
-        read_only_fields = ['net_salary']
+        read_only_fields = ['overtime_amount', 'net_salary']
 

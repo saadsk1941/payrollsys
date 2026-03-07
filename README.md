@@ -60,3 +60,13 @@ $env:DB_PORT = "5432"
 | `/api/leave/` | GET, POST | Leave management |
 | `/api/payroll/` | GET, POST | Payroll |
 | `/api/dashboard/summary/` | GET | Dashboard stats |
+
+---
+
+## Optional SQL Schema File
+
+Project me `backend/database_schema.sql` file add hai jisme saari current DB tables/indexes ka SQL schema hai.
+
+Use case:
+- Agar aap kisi aur machine par direct SQL se schema create karna chahte ho (without manual table creation).
+- Default setup ke liye abhi bhi recommended flow `setup.bat` + migrations hi hai.

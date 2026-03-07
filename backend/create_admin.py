@@ -13,7 +13,7 @@ if not User.objects.filter(username='admin').exists():
         username='admin',
         email='admin@payroll.com',
         password='admin123',
-        role='ADMIN',
+        role='SUPERVISOR',
     )
     print('Admin created: username=admin, password=admin123')
 else:

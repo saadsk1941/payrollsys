@@ -1,6 +1,7 @@
 from django.db import models
 from employees.models import Employee
 
+
 class Attendance(models.Model):
     STATUS_CHOICES = (
         ('PRESENT', 'Present'),
@@ -10,6 +11,7 @@ class Attendance(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='attendances')
     date = models.DateField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    overtime_hours = models.DecimalField(max_digits=5, decimal_places=2, default=0)
 
     class Meta:
         unique_together = ('employee', 'date')
@@ -17,5 +19,3 @@ class Attendance(models.Model):
 
     def __str__(self) -> str:
         return f'{self.employee.name} - {self.date} - {self.status}'
-
-from django.db import models
